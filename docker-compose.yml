@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  database-mysql:
+    container_name: gayoung-database
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: musinsa
+      MYSQL_ROOT_PASSWORD: root!@34
+      MYSQL_USER: musinsa_user
+      MYSQL_PASSWORD: musinsa_password
+    ports:
+      - '3306:3306'
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  application1:
+    build:
+      context: ./module-admin
+      dockerfile: Dockerfile
+    container_name: gayoung-application-admin
+    restart: always
+    ports:
+      - "18080:8080"
+    depends_on:
+      database-mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database-mysql:3306/musinsa
+      SPRING_DATASOURCE_USERNAME: musinsa_user
+      SPRING_DATASOURCE_PASSWORD: musinsa_password
+
+  application2:
+    build:
+      context: ./module-user
+      dockerfile: Dockerfile
+    container_name: gayoung-application-user
+    restart: always
+    ports:
+      - "18081:8081"
+    depends_on:
+      database-mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database-mysql:3306/musinsa
+      SPRING_DATASOURCE_USERNAME: musinsa_user
+      SPRING_DATASOURCE_PASSWORD: musinsa_password

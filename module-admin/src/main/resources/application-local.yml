@@ -1,0 +1,31 @@
+# Environment : Local
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/MUSINSA?useUnicode=yes&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: root!@34
+  jpa:
+    hibernate:
+      ddl-auto: update
+      globally_quoted_identifiers: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        format_sql: true
+
+# API Docs (Swagger)
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    syntax-highlight:
+      activated: false
+      theme: monokai
